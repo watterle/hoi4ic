@@ -1,8 +1,10 @@
 
 import os
 
-os.chdir(r'C:\\Users\\cero\\Documents\\Paradox Interactive\\savefilecheck\\save\\')
-print(os.getcwd())
+absolute_path = os.path.dirname(__file__)
+relative_path = "save\\"
+folderpath = os.path.join(absolute_path, relative_path)
+os.chdir(folderpath)
 
 for count, f in enumerate(os.listdir()):
 	f_name, f_ext = os.path.splitext(f)
