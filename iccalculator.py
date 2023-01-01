@@ -13,7 +13,10 @@ minors=alliedminors+axisminors
 #Sets which countries to analyze
 inputtag=["\"GER\"","\"SOV\""]
 #Sets "save" folder path
-folderpath="C:\\Users\\cero\\Documents\\Paradox Interactive\\savefilecheck\\save\\"
+absolute_path = os.path.dirname(__file__)
+print(absolute_path)
+relative_path = "save\\"
+folderpath = os.path.join(absolute_path, relative_path)
 nautosaves=len([entry for entry in os.listdir(folderpath) if os.path.isfile(os.path.join(folderpath, entry))])
 
 
