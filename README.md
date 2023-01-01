@@ -15,3 +15,6 @@ Savegame checker for hoi4
 ## Things to edit
 - Select the countries to analyze in the inputtag variable. Tags variable has a list of them, majors/minors variables are shortcuts to usual choices.
 
+## Notes
+- Monthly IC is approximated as 30 times the instant IC at the time of the save. Production growth is not simulated, number of days doesn't change, any change between saves is ignored.
+- Only actual production is measured. IC from focuses/decision is not considered.
