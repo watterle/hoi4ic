@@ -70,7 +70,7 @@ def monthlyic(fullpath,row): #ic calculator
             else:
                 tagic[row][count]=0
 
-#calculates monthlyic for every file in /save
+#calculates monthlyic for every file in /save. Edit this if you haven't saved your files as save1, save2,...
 for i in range(nautosaves):  
     filename=folderpath+"save"+str(i+1)+".hoi4"
     print(filename)
