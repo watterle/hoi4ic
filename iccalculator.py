@@ -6,14 +6,14 @@ import scipy.integrate as sci
 import sys
 
 tags=["\"ENG\"", "\"USA\"", "\"FRA\"", "\"RAJ\"", "\"CAN\"", "\"AST\"", "\"SAF\"", "\"NZL\"", "\"SOV\"", "\"GER\"", "\"ITA\"", "\"HUN\"", "\"ROM\"", "\"BUL\"", "\"VIC\"", "\"JAP\"", "\"MAN\"", "\"FIN\"", "\"SLO\"", "\"SPR\"", "\"LAT\"", "\"YUG\"", "\"GRE\"", "\"ALB\"", "\"NOR\"", "\"POR\"", "\"IRE\"", "\"ETH\"", "\"IRQ\"", "\"SIA\"", "\"VEN\"", "\"MON\"", "\"TAN\"", "\"PAR\"", "\"PRC\"", "\"BEL\"", "\"INS\"", "\"AUS\"", "\"POL\"", "\"CZE\"", "\"HOL\""]
-majors=["\"GER\"","\"SOV\"","\"ENG\"","\"JAP\"","\"ITA\"","\"USA\"","\"FRA\""]
+majors=["\"GER\"","\"SOV\"","\"ENG\"","\"JAP\"","\"ITA\"","\"USA\""]
 alliedminors=["\"RAJ\"", "\"CAN\"", "\"AST\"", "\"SAF\""]
-axisminors=["\"HUN\"", "\"ROM\"", "\"BUL\"","\"SLO\""]
+axisminors=["\"HUN\"", "\"ROM\"", "\"BUL\"","\"SPR\""]
 minors=alliedminors+axisminors
 
 
 #Sets which countries to analyze
-inputtag=["\"GER\"","\"SOV\""]
+inputtag=majors
 #Sets "save" folder path
 absolute_path = os.path.dirname(__file__)
 relative_path = "save\\"
@@ -109,24 +109,29 @@ with open('matrixcum.txt', 'w') as testfile:
         testfile.write(','.join([str(a) for a in row]) + '\n')
 
 
+x=range(1,nautosaves)
+x_ticks = [0, 12, 24, 36, 48, 60, 72]
+x_labels = ['1936', '1937', '1938', '1939', '1940', '1941', '1942']
 #plots results
-plt.figure("Cumulative IC")
-plt.title("Cumulative IC") 
-plt.xlabel("Months") 
-plt.ylabel("Total IC") 
-plt.plot(result) 
+plt.figure("Cumulative Produced IC")
+plt.title("Cumulative Produced IC") 
+plt.xlabel("Years") 
+plt.ylabel("Total Produced IC") 
+plt.plot(x,result) 
+plt.xticks(x_ticks, x_labels)
 plt.legend(tagic[0])
 xcoords = range(0,nautosaves,12)
 for xc in xcoords:
     plt.axvline(x=xc, color='k', ls=':', linewidth=1)
 
 
-
-plt.figure("Monthly IC")
-plt.title("Monthly IC") 
-plt.xlabel("Months") 
-plt.ylabel("Monthly IC") 
-plt.plot(dat) 
+x=range(0,nautosaves)
+plt.figure("Monthly Produced IC")
+plt.title("Monthly Produced IC") 
+plt.xlabel("Year") 
+plt.ylabel("Monthly Produced IC") 
+plt.plot(x,dat) 
+plt.xticks(x_ticks, x_labels)
 plt.legend(tagic[0])
 xcoords = range(0,nautosaves,12)
 for xc in xcoords:
