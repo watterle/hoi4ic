@@ -2,6 +2,8 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import scipy.integrate as sci
+import sys
 
 tags=["\"ENG\"", "\"USA\"", "\"FRA\"", "\"RAJ\"", "\"CAN\"", "\"AST\"", "\"SAF\"", "\"NZL\"", "\"SOV\"", "\"GER\"", "\"ITA\"", "\"HUN\"", "\"ROM\"", "\"BUL\"", "\"VIC\"", "\"JAP\"", "\"MAN\"", "\"FIN\"", "\"SLO\"", "\"SPR\"", "\"LAT\"", "\"YUG\"", "\"GRE\"", "\"ALB\"", "\"NOR\"", "\"POR\"", "\"IRE\"", "\"ETH\"", "\"IRQ\"", "\"SIA\"", "\"VEN\"", "\"MON\"", "\"TAN\"", "\"PAR\"", "\"PRC\"", "\"BEL\"", "\"INS\"", "\"AUS\"", "\"POL\"", "\"CZE\"", "\"HOL\""]
 majors=["\"GER\"","\"SOV\"","\"ENG\"","\"JAP\"","\"ITA\"","\"USA\"","\"FRA\""]
@@ -27,6 +29,17 @@ def listidx(L, obj):
     if obj in L:
         return L.index(obj)
     return -1
+
+def moving_avg(x, n):
+    cumsum = np.cumsum(np.insert(x, 0, 0)) 
+    return (cumsum[n:] - cumsum[:-n]) / float(n)
+
+def print_progress_bar(index, total, label):
+    n_bar = 50  
+    progress = index / total
+    sys.stdout.write('\r')
+    sys.stdout.write(f"[{'=' * int(n_bar * progress):{n_bar}s}] {int(100 * progress)}%  {label}")
+    sys.stdout.flush()
 
 def print2d(values):
     lines = []
@@ -75,14 +88,16 @@ def monthlyic(fullpath,row): #ic calculator
 #calculates monthlyic for every file in /save. Edit this if you haven't saved your files as save1, save2,...
 for i in range(nautosaves):  
     filename=folderpath+"save"+str(i+1)+".hoi4"
-    print(filename)
+    print_progress_bar(i+1, nautosaves, "Wait...")
     monthlyic(filename,i+1)
 
 
-#multiply by 30 and truncates for monthly IC
+#apply moving average for instant ic and integrates for cumulative ic
 dat = np.array(tagic[1:])*30
+for i in range(len(inputtag)):
+    dat[1:nautosaves-1,i]=moving_avg(dat[:,i],3)
+result = sci.cumtrapz(dat, axis=0, dx=1)
 dat = np.around(dat, decimals=3)
-result = np.cumsum(dat, axis=0)
 result = np.around(result, decimals=3)
 
 #saves results on txt files
