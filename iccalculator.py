@@ -120,9 +120,7 @@ plt.ylabel("Total Produced IC")
 plt.plot(x,result) 
 plt.xticks(x_ticks, x_labels)
 plt.legend(tagic[0])
-xcoords = range(0,nautosaves,12)
-for xc in xcoords:
-    plt.axvline(x=xc, color='k', ls=':', linewidth=1)
+plt.grid( linestyle = '--', linewidth = 0.5)
 
 
 x=range(0,nautosaves)
@@ -131,12 +129,9 @@ plt.title("Monthly Produced IC")
 plt.xlabel("Year") 
 plt.ylabel("Monthly Produced IC") 
 plt.plot(x,dat) 
+plt.grid( linestyle = '--', linewidth = 0.5)
 plt.xticks(x_ticks, x_labels)
 plt.legend(tagic[0])
-xcoords = range(0,nautosaves,12)
-for xc in xcoords:
-    plt.axvline(x=xc, color='k', ls=':', linewidth=1)
-
 
 plt.show()
 
