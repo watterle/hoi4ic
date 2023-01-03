@@ -5,15 +5,15 @@ import os
 import scipy.integrate as sci
 import sys
 
-tags=["\"ENG\"", "\"USA\"", "\"FRA\"", "\"RAJ\"", "\"CAN\"", "\"AST\"", "\"SAF\"", "\"NZL\"", "\"SOV\"", "\"GER\"", "\"ITA\"", "\"HUN\"", "\"ROM\"", "\"BUL\"", "\"VIC\"", "\"JAP\"", "\"MAN\"", "\"FIN\"", "\"SLO\"", "\"SPR\"", "\"LAT\"", "\"YUG\"", "\"GRE\"", "\"ALB\"", "\"NOR\"", "\"POR\"", "\"IRE\"", "\"ETH\"", "\"IRQ\"", "\"SIA\"", "\"VEN\"", "\"MON\"", "\"TAN\"", "\"PAR\"", "\"PRC\"", "\"BEL\"", "\"INS\"", "\"AUS\"", "\"POL\"", "\"CZE\"", "\"HOL\""]
+tags=["\"ENG\"", "\"USA\"", "\"FRA\"", "\"RAJ\"", "\"EFR\"", "\"CAN\"", "\"AST\"", "\"CHI\"", "\"SAF\"","\"PER\"", "\"NZL\"", "\"SOV\"", "\"GER\"", "\"ITA\"", "\"HUN\"", "\"ROM\"", "\"BUL\"", "\"VIC\"", "\"JAP\"", "\"MAN\"", "\"FIN\"", "\"SLO\"", "\"SPR\"", "\"LAT\"", "\"YUG\"", "\"GRE\"", "\"ALB\"", "\"NOR\"", "\"POR\"", "\"IRE\"", "\"ETH\"", "\"IRQ\"", "\"SIA\"", "\"VEN\"", "\"MON\"", "\"TAN\"", "\"PAR\"", "\"PRC\"", "\"BEL\"", "\"INS\"", "\"AUS\"", "\"POL\"", "\"CZE\"", "\"HOL\""]
 majors=["\"GER\"","\"SOV\"","\"ENG\"","\"JAP\"","\"ITA\"","\"USA\""]
-alliedminors=["\"RAJ\"", "\"CAN\"", "\"AST\"", "\"SAF\""]
+alliedminors=["\"RAJ\"", "\"CAN\"", "\"AST\"", "\"SAF\"", "\"NZL\""]
 axisminors=["\"HUN\"", "\"ROM\"", "\"BUL\"","\"SPR\""]
 minors=alliedminors+axisminors
 
 
 #Sets which countries to analyze
-inputtag=majors
+inputtag=minors
 #Sets "save" folder path
 absolute_path = os.path.dirname(__file__)
 relative_path = "save\\"
@@ -52,32 +52,37 @@ def monthlyic(fullpath,row): #ic calculator
     with open(fullpath, 'r', encoding="utf8") as fp:
         flag_found=0
         content = fp.read()
-        indices_object = re.finditer(pattern='military_lines={', string=content) #looks for military factory production lines
+        custom_regex=r'military_lines={|naval_lines={|railway_gun_lines'
+        indices_object = re.finditer(custom_regex, string=content) #looks for military factory production lines
         indices = [index.start() for index in indices_object]
         countryic=[]
         icsum=0
         for x in indices:
-                idx=content.find('speed=', x, x+200 )  #Literally the line's daily IC
-                idx3=content.find('production_licenses', x-1000, x ) #Is present at the first line for every country
-                idx4=content.find('owned_license={', x-1000,x) #same as before, check needed if country has many licenses
-                if idx3!=-1 or idx4!=-1:
+                idx=content.find('speed=', x, x+400 )  #Literally the line's daily IC
+                idx3=content.find('production_licenses', x-600, x ) #Is present at the first line for every country
+                idx4=content.find('owned_license={', x-600,x) #same as before, check needed if country has many licenses
+                idx5=content.find('naval_lines={', x-20, x+20 )
+                if (idx3!=-1 or idx4!=-1):
                     countryic.append(icsum)
-                    for jj in tagic[0]:
+                    #for jj in tagic[0]:
+                    for jj in tags:
                         my_regex = r"sender="+jj+r"\n\t\t\t\t\treceiver="+jj+r"\n\t\t\t\t\tconvoys_owner="+jj #Finds the country using the factories. Might break if no resources and units in country
                         country=re.search(my_regex, content[x-50000:x])
                         my_regex2 = r"owner="+jj
                         country2=re.search(my_regex2, content[x-1000:x]) #convoy owner
-                        if country or country2:
+                        if country or country2 and idx5==-1:
                             countryic.append(jj)
                             flag_found=1
-                    if flag_found!=1:
+                    if flag_found!=1 :
                         countryic.append("UNKOWN")
                     icsum=0
                     flag_found=0
                 if idx!=-1:
                     idx2=content.find('\n', idx, idx+30) #registers the line's daily IC
-                    icsum=icsum+float(content[idx+6:idx2])
+                    if idx5==-1:
+                        icsum=icsum+float(content[idx+6:idx2])
         countryic.pop(0)
+        #print(countryic)
         for count,value in enumerate(tagic[0]): #build output table with ICs
             position=listidx(countryic,value)
             if position!=-1:
