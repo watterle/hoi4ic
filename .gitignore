@@ -1,4 +1,6 @@
-save
-HOI4SAVE.pmc
-matrix.txt
-matrixcum.txt
+*
+!.gitignore
+!HOI4SAVEMONTHLY.pmc
+!iccalculator.py
+!README.md
+!rename.py

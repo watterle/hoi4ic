@@ -5,7 +5,7 @@ import os
 import scipy.integrate as sci
 import sys
 
-tags=["\"ENG\"", "\"USA\"", "\"FRA\"", "\"RAJ\"", "\"EFR\"", "\"CAN\"", "\"AST\"", "\"CHI\"", "\"SAF\"","\"PER\"", "\"NZL\"", "\"SOV\"", "\"GER\"", "\"ITA\"", "\"HUN\"", "\"ROM\"", "\"BUL\"", "\"VIC\"", "\"JAP\"", "\"MAN\"", "\"FIN\"", "\"SLO\"", "\"SPR\"", "\"LAT\"", "\"YUG\"", "\"GRE\"", "\"ALB\"", "\"NOR\"", "\"POR\"", "\"IRE\"", "\"ETH\"", "\"IRQ\"", "\"SIA\"", "\"VEN\"", "\"MON\"", "\"TAN\"", "\"PAR\"", "\"PRC\"", "\"BEL\"", "\"INS\"", "\"AUS\"", "\"POL\"", "\"CZE\"", "\"HOL\""]
+tags=["\"ENG\"", "\"USA\"", "\"FRA\"", "\"RAJ\"", "\"MAN\"", "\"EFR\"", "\"CAN\"", "\"AST\"", "\"CHI\"", "\"SAF\"","\"PER\"", "\"NZL\"", "\"SOV\"", "\"GER\"", "\"ITA\"", "\"HUN\"", "\"ROM\"", "\"BUL\"", "\"VIC\"", "\"JAP\"", "\"MAN\"", "\"FIN\"", "\"SLO\"", "\"SPR\"", "\"LAT\"", "\"YUG\"", "\"GRE\"", "\"ALB\"", "\"NOR\"", "\"POR\"", "\"IRE\"", "\"ETH\"", "\"IRQ\"", "\"SIA\"", "\"VEN\"", "\"MON\"", "\"TAN\"", "\"PAR\"", "\"PRC\"", "\"BEL\"", "\"INS\"", "\"AUS\"", "\"POL\"", "\"CZE\"", "\"HOL\""]
 majors=["\"GER\"","\"SOV\"","\"ENG\"","\"JAP\"","\"ITA\"","\"USA\""]
 alliedminors=["\"RAJ\"", "\"CAN\"", "\"AST\"", "\"SAF\"", "\"NZL\""]
 axisminors=["\"HUN\"", "\"ROM\"", "\"BUL\"","\"SPR\""]
@@ -13,7 +13,7 @@ minors=alliedminors+axisminors
 
 
 #Sets which countries to analyze
-inputtag=minors
+inputtag=["\"RAJ\""]
 #Sets "save" folder path
 absolute_path = os.path.dirname(__file__)
 relative_path = "save\\"
@@ -47,6 +47,8 @@ def print2d(values):
         lines.append(' '.join(str(x) for x in row))
     print('\n'.join(lines))       
 
+def rindex(lst, value):
+    return len(lst) - lst[::-1].index(value) - 1
 
 def monthlyic(fullpath,row): #ic calculator
     with open(fullpath, 'r', encoding="utf8") as fp:
@@ -59,12 +61,11 @@ def monthlyic(fullpath,row): #ic calculator
         icsum=0
         for x in indices:
                 idx=content.find('speed=', x, x+400 )  #Literally the line's daily IC
-                idx3=content.find('production_licenses', x-600, x ) #Is present at the first line for every country
-                idx4=content.find('owned_license={', x-600,x) #same as before, check needed if country has many licenses
+                idx3=content.find('production_licenses', x-500, x ) #Is present at the first line for every country
+                idx4=content.find('owned_license={', x-500,x) #same as before, check needed if country has many licenses
                 idx5=content.find('naval_lines={', x-20, x+20 )
                 if (idx3!=-1 or idx4!=-1):
                     countryic.append(icsum)
-                    #for jj in tagic[0]:
                     for jj in tags:
                         my_regex = r"sender="+jj+r"\n\t\t\t\t\treceiver="+jj+r"\n\t\t\t\t\tconvoys_owner="+jj #Finds the country using the factories. Might break if no resources and units in country
                         country=re.search(my_regex, content[x-50000:x])
@@ -82,11 +83,14 @@ def monthlyic(fullpath,row): #ic calculator
                     if idx5==-1:
                         icsum=icsum+float(content[idx+6:idx2])
         countryic.pop(0)
-        #print(countryic)
+        print(countryic)
         for count,value in enumerate(tagic[0]): #build output table with ICs
-            position=listidx(countryic,value)
+            position=rindex(countryic,value)
             if position!=-1:
-                tagic[row][count]=round(countryic[position+1],3)
+                if (position+1)<len(countryic):
+                    tagic[row][count]=round(countryic[position+1],3)
+                else:
+                    tagic[row][count]=0
             else:
                 tagic[row][count]=0
 
