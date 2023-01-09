@@ -8,12 +8,12 @@ import sys
 tags=["\"ENG\"", "\"USA\"", "\"FRA\"", "\"RAJ\"", "\"MAN\"", "\"EFR\"", "\"CAN\"", "\"AST\"", "\"CHI\"", "\"SAF\"","\"PER\"", "\"NZL\"", "\"SOV\"", "\"GER\"", "\"ITA\"", "\"HUN\"", "\"ROM\"", "\"BUL\"", "\"VIC\"", "\"JAP\"", "\"MAN\"", "\"FIN\"", "\"SLO\"", "\"SPR\"", "\"LAT\"", "\"YUG\"", "\"GRE\"", "\"ALB\"", "\"NOR\"", "\"POR\"", "\"IRE\"", "\"ETH\"", "\"IRQ\"", "\"SIA\"", "\"VEN\"", "\"MON\"", "\"TAN\"", "\"PAR\"", "\"PRC\"", "\"BEL\"", "\"INS\"", "\"AUS\"", "\"POL\"", "\"CZE\"", "\"HOL\""]
 majors=["\"GER\"","\"SOV\"","\"ENG\"","\"JAP\"","\"ITA\"","\"USA\""]
 alliedminors=["\"RAJ\"", "\"CAN\"", "\"AST\"", "\"SAF\"", "\"NZL\""]
-axisminors=["\"HUN\"", "\"ROM\"", "\"BUL\"","\"SPR\""]
+axisminors=["\"HUN\"", "\"ROM\"", "\"BUL\"","\"SPR\"","\"MAN\"","\"SLO\""]
 minors=alliedminors+axisminors
 
 
 #Sets which countries to analyze
-inputtag=["\"RAJ\""]
+inputtag=minors
 #Sets "save" folder path
 absolute_path = os.path.dirname(__file__)
 relative_path = "save\\"
@@ -72,6 +72,8 @@ def monthlyic(fullpath,row): #ic calculator
                         my_regex2 = r"owner="+jj
                         country2=re.search(my_regex2, content[x-1000:x]) #convoy owner
                         if country or country2 and idx5==-1:
+                            if jj=="\"CZE\"": 
+                                jj="\"SLO\""
                             countryic.append(jj)
                             flag_found=1
                     if flag_found!=1 :
@@ -83,7 +85,7 @@ def monthlyic(fullpath,row): #ic calculator
                     if idx5==-1:
                         icsum=icsum+float(content[idx+6:idx2])
         countryic.pop(0)
-        print(countryic)
+        #print(countryic)
         for count,value in enumerate(tagic[0]): #build output table with ICs
             position=rindex(countryic,value)
             if position!=-1:
@@ -99,6 +101,7 @@ for i in range(nautosaves):
     filename=folderpath+"save"+str(i+1)+".hoi4"
     print_progress_bar(i+1, nautosaves, "Wait...")
     monthlyic(filename,i+1)
+
 
 
 #apply moving average for instant ic and integrates for cumulative ic
