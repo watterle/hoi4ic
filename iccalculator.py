@@ -6,14 +6,14 @@ import scipy.integrate as sci
 import sys
 
 tags=["\"ENG\"", "\"USA\"", "\"FRA\"", "\"RAJ\"", "\"MAN\"", "\"EFR\"", "\"CAN\"", "\"AST\"", "\"CHI\"", "\"SAF\"","\"PER\"", "\"NZL\"", "\"SOV\"", "\"GER\"", "\"ITA\"", "\"HUN\"", "\"ROM\"", "\"BUL\"", "\"VIC\"", "\"JAP\"", "\"MAN\"", "\"FIN\"", "\"SLO\"", "\"SPR\"", "\"LAT\"", "\"YUG\"", "\"GRE\"", "\"ALB\"", "\"NOR\"", "\"POR\"", "\"IRE\"", "\"ETH\"", "\"IRQ\"", "\"SIA\"", "\"VEN\"", "\"MON\"", "\"TAN\"", "\"PAR\"", "\"PRC\"", "\"BEL\"", "\"INS\"", "\"AUS\"", "\"POL\"", "\"CZE\"", "\"HOL\""]
-majors=["\"GER\"","\"SOV\"","\"ENG\"","\"JAP\"","\"ITA\"","\"USA\""]
+majors=["\"GER\"","\"SOV\"","\"ENG\"","\"JAP\"","\"USA\"","\"ITA\"","\"FRA\""]
 alliedminors=["\"RAJ\"", "\"CAN\"", "\"AST\"", "\"SAF\"", "\"NZL\""]
-axisminors=["\"HUN\"", "\"ROM\"", "\"BUL\"","\"SPR\"","\"MAN\"","\"SLO\""]
+axisminors=["\"HUN\"", "\"ROM\"", "\"BUL\"","\"SPR\"","\"SLO\"","\"MAN\""]
 minors=alliedminors+axisminors
 
 
 #Sets which countries to analyze
-inputtag=minors
+inputtag=majors
 #Sets "save" folder path
 absolute_path = os.path.dirname(__file__)
 relative_path = "save\\"
@@ -23,7 +23,8 @@ nautosaves=len([entry for entry in os.listdir(folderpath) if os.path.isfile(os.p
 
 tagic=[ [0]*len(inputtag) for i in range(nautosaves+1)] #monthly IC in columns
 tagic[0]=inputtag  #tags
-
+navtagic=[ [0]*len(inputtag) for i in range(nautosaves+1)] #monthly IC in columns
+navtagic[0]=inputtag  #tags
 
 def listidx(L, obj):
     if obj in L:
@@ -54,18 +55,22 @@ def monthlyic(fullpath,row): #ic calculator
     with open(fullpath, 'r', encoding="utf8") as fp:
         flag_found=0
         content = fp.read()
-        custom_regex=r'military_lines={|naval_lines={|railway_gun_lines'
+        custom_regex=r'military_lines={|naval_lines={|railway_gun_lines|ship_refit_lines={'
         indices_object = re.finditer(custom_regex, string=content) #looks for military factory production lines
         indices = [index.start() for index in indices_object]
         countryic=[]
+        navcountryic=[]
         icsum=0
+        navicsum=0
         for x in indices:
                 idx=content.find('speed=', x, x+400 )  #Literally the line's daily IC
                 idx3=content.find('production_licenses', x-500, x ) #Is present at the first line for every country
                 idx4=content.find('owned_license={', x-500,x) #same as before, check needed if country has many licenses
                 idx5=content.find('naval_lines={', x-20, x+20 )
+                idx6=content.find('ship_refit_lines={', x-20, x+20 )
                 if (idx3!=-1 or idx4!=-1):
                     countryic.append(icsum)
+                    navcountryic.append(navicsum)
                     for jj in tags:
                         my_regex = r"sender="+jj+r"\n\t\t\t\t\treceiver="+jj+r"\n\t\t\t\t\tconvoys_owner="+jj #Finds the country using the factories. Might break if no resources and units in country
                         country=re.search(my_regex, content[x-50000:x])
@@ -75,26 +80,40 @@ def monthlyic(fullpath,row): #ic calculator
                             if jj=="\"CZE\"": 
                                 jj="\"SLO\""
                             countryic.append(jj)
+                            navcountryic.append(jj)
                             flag_found=1
                     if flag_found!=1 :
-                        countryic.append("UNKOWN")
+                        countryic.append("UNKNOWN")
+                        navcountryic.append("UNKNOWN")
                     icsum=0
+                    navicsum=0
                     flag_found=0
                 if idx!=-1:
                     idx2=content.find('\n', idx, idx+30) #registers the line's daily IC
-                    if idx5==-1:
+                    if idx5==-1 and idx6==-1:
                         icsum=icsum+float(content[idx+6:idx2])
+                    else:
+                        navicsum=navicsum+float(content[idx+6:idx2])
         countryic.pop(0)
+        navcountryic.pop(0)
         #print(countryic)
         for count,value in enumerate(tagic[0]): #build output table with ICs
             position=rindex(countryic,value)
-            if position!=-1:
-                if (position+1)<len(countryic):
-                    tagic[row][count]=round(countryic[position+1],3)
-                else:
-                    tagic[row][count]=0
+            if (position!=-1) and ((position+1)<len(countryic)):
+                tagic[row][count]=round(countryic[position+1],3)
             else:
                 tagic[row][count]=0
+        for count,value in enumerate(navtagic[0]): #build output table with ICs
+            position=rindex(navcountryic,value)
+            if position!=-1:
+                if (position+1)<len(navcountryic):
+                    navtagic[row][count]=round(navcountryic[position+1],3)
+                else:
+                    navtagic[row][count]=0
+            else:
+                navtagic[row][count]=0
+
+
 
 #calculates monthlyic for every file in /save. Edit this if you haven't saved your files as save1, save2,...
 for i in range(nautosaves):  
@@ -112,23 +131,33 @@ result = sci.cumtrapz(dat, axis=0, dx=1)
 dat = np.around(dat, decimals=3)
 result = np.around(result, decimals=3)
 
+navdat = np.array(navtagic[1:])*30
+for i in range(len(inputtag)):
+    navdat[1:nautosaves-1,i]=moving_avg(navdat[:,i],3)
+navresult = sci.cumtrapz(navdat, axis=0, dx=1)
+navdat = np.around(navdat, decimals=3)
+navresult = np.around(navresult, decimals=3)
+
+
+
 #saves results on txt files
-with open('matrix.txt', 'w') as testfile:
-    for row in dat:
-        testfile.write(','.join([str(a) for a in row]) + '\n')
-with open('matrixcum.txt', 'w') as testfile:
-    for row in result:
-        testfile.write(','.join([str(a) for a in row]) + '\n')
+#with open('matrix.txt', 'w') as testfile:
+#    for row in dat:
+#        testfile.write(','.join([str(a) for a in row]) + '\n')
+#with open('matrixcum.txt', 'w') as testfile:
+#    for row in result:
+#        testfile.write(','.join([str(a) for a in row]) + '\n')
 
 
 x=range(1,nautosaves)
 x_ticks = [0, 12, 24, 36, 48, 60, 72]
 x_labels = ['1936', '1937', '1938', '1939', '1940', '1941', '1942']
 #plots results
-plt.figure("Cumulative Produced IC")
-plt.title("Cumulative Produced IC") 
+plt.rcParams.update({'font.size': 15})
+plt.figure("Produced Land IC")
+plt.title("Produced Land IC") 
 plt.xlabel("Years") 
-plt.ylabel("Total Produced IC") 
+plt.ylabel("Produced Land IC") 
 plt.plot(x,result) 
 plt.xticks(x_ticks, x_labels)
 plt.legend(tagic[0])
@@ -136,14 +165,37 @@ plt.grid( linestyle = '--', linewidth = 0.5)
 
 
 x=range(0,nautosaves)
-plt.figure("Monthly Produced IC")
-plt.title("Monthly Produced IC") 
+plt.figure("Monthly Land IC")
+plt.title("Monthly Land IC") 
 plt.xlabel("Year") 
-plt.ylabel("Monthly Produced IC") 
+plt.ylabel("Monthly Land IC") 
 plt.plot(x,dat) 
 plt.grid( linestyle = '--', linewidth = 0.5)
 plt.xticks(x_ticks, x_labels)
 plt.legend(tagic[0])
+
+
+x=range(1,nautosaves)
+#plots results
+plt.figure("Cumulative Naval IC")
+plt.title("Cumulative Naval IC") 
+plt.xlabel("Years") 
+plt.ylabel("Cumulative Naval IC") 
+plt.plot(x,navresult) 
+plt.xticks(x_ticks, x_labels)
+plt.legend(navtagic[0])
+plt.grid( linestyle = '--', linewidth = 0.5)
+
+
+x=range(0,nautosaves)
+plt.figure("Monthly Naval IC")
+plt.title("Monthly Naval IC") 
+plt.xlabel("Year") 
+plt.ylabel("Monthly Naval IC") 
+plt.plot(x,navdat) 
+plt.grid( linestyle = '--', linewidth = 0.5)
+plt.xticks(x_ticks, x_labels)
+plt.legend(navtagic[0])
 
 plt.show()
 
