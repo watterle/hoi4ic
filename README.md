@@ -7,9 +7,9 @@ Savegame checker for hoi4
 
 ## Usage
 1. Change Hoi4 saves to be non binary in settings.txt in hoi4 documents folder
-2. Obtain monthly saves. Autosaves for singleplayer, autosave macro for multiplayer (it's likely a smarter way exists).
+2. Obtain monthly saves. Autosaves for singleplayer, autosave macro for multiplayer (or smarter ways).
 3. Move saves in /save folder
-4. Rename them to "save1-hoi4", "save2.hoi4", etc., or whatever you set the IC calculator to read. rename.py does this.
+4. Rename them to "save1.hoi4", "save2.hoi4", etc., or whatever you set the IC calculator to read. rename.py does this.
 5. Run IC calculator
 
 ## Things to edit
