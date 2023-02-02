@@ -17,7 +17,11 @@ inputtag=majors
 #Sets "save" folder path
 absolute_path = os.path.dirname(__file__)
 relative_path = "save\\"
+relative_path_images = "images\\"
 folderpath = os.path.join(absolute_path, relative_path)
+folderpathimages = os.path.join(absolute_path, relative_path_images)
+if not os.path.exists(folderpathimages):
+    os.makedirs(folderpathimages)
 nautosaves=len([entry for entry in os.listdir(folderpath) if os.path.isfile(os.path.join(folderpath, entry))])
 
 
@@ -162,7 +166,8 @@ plt.plot(x,result)
 plt.xticks(x_ticks, x_labels)
 plt.legend(tagic[0])
 plt.grid( linestyle = '--', linewidth = 0.5)
-
+filename=folderpathimages+"ProducedLandIC.png"
+plt.savefig(filename, dpi=600, bbox_inches='tight' )
 
 x=range(0,nautosaves)
 plt.figure("Monthly Land IC")
@@ -173,7 +178,8 @@ plt.plot(x,dat)
 plt.grid( linestyle = '--', linewidth = 0.5)
 plt.xticks(x_ticks, x_labels)
 plt.legend(tagic[0])
-
+filename=folderpathimages+"MonthlyLandIC.png"
+plt.savefig(filename, dpi=600, bbox_inches='tight' )
 
 x=range(1,nautosaves)
 #plots results
@@ -185,7 +191,8 @@ plt.plot(x,navresult)
 plt.xticks(x_ticks, x_labels)
 plt.legend(navtagic[0])
 plt.grid( linestyle = '--', linewidth = 0.5)
-
+filename=folderpathimages+"CumulativeNavalIC.png"
+plt.savefig(filename, dpi=600, bbox_inches='tight' )
 
 x=range(0,nautosaves)
 plt.figure("Monthly Naval IC")
@@ -196,6 +203,7 @@ plt.plot(x,navdat)
 plt.grid( linestyle = '--', linewidth = 0.5)
 plt.xticks(x_ticks, x_labels)
 plt.legend(navtagic[0])
+filename=folderpathimages+"MonthlyNavalIC.png"
+plt.savefig(filename, dpi=600, bbox_inches='tight' )
 
-plt.show()
 
