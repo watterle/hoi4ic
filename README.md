@@ -42,3 +42,8 @@ If you fuck up and don't resume the loop for a year or so, it lags the pc until 
 - Monthly IC is approximated as 30 times the instant IC at the time of the save. 
 - A moving mean of 3 months is applied to the data.
 - Cumulative IC is calculated with trapezoidal approximation
+
+## Bugs
+- If something is host tool annexed, it needs to be removed from the list of tags. I
+
+- Sometimes the script can't find nations. Either play with the search function variables and hope for the best, or send me the saves. Again you can remove it from the list of tags as a stopgap.
