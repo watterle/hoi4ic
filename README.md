@@ -29,7 +29,9 @@ Savegame checker for hoi4
 5. Find image s3.png (save menu)
 6. Press Save
 7. Repeat
+
 It fucks up if you keep your cursor on the pixels it's looking for, just move it a bit and it will go on.
+
 If you stop mid loop for micro or mistake (pressed something while it was doing it), you can just return manually to the point it was in (closed save menu, just reopen save menu manually and it will restart)
 
 
