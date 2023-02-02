@@ -16,9 +16,9 @@ Savegame checker for hoi4
 - Select the countries to analyze in the inputtag variable. Tags variable has a list of them, majors/minors variables are shortcuts to usual choices.
 
 ## Autoclicker settings
-- Modify the path to the images inside the script to fit your own pc. The files are s1.png s2.png s3.png.
-- Press the run button on the middle-top to start the script. It will open a small window where you can lookout for the functioning
-- Set number of loops to infinite
+- Modify the path to the images inside the script to fit your own pc. The files are s1.png s2.png s3.png. Right click to edit the 3 lines working on pictures.
+- Press the play button on the middle-top to start the script. It will open a small window where you can check the script progress and start/stop it
+- Set number of loops to infinite (0)
 - Run the script from the window
 
 ## Autoclicker loop and notes
@@ -32,7 +32,9 @@ Savegame checker for hoi4
 
 It fucks up if you keep your cursor on the pixels it's looking for, just move it a bit and it will go on.
 
-If you stop mid loop for micro or mistake (pressed something while it was doing it), you can just return manually to the point it was in (closed save menu, just reopen save menu manually and it will restart)
+If you stop mid loop for micro or mistake (pressed something while it was doing it), you can just return manually to the point it was in (closed save menu, just reopen save menu manually and it will restart).
+
+If you fuck up and don't resume the loop for a year or so, it lags the pc until you do or close the program. No idea why but it works as a remainder.
 
 
 ## Notes
