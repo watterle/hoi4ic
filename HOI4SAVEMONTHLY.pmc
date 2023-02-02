@@ -2,16 +2,16 @@
 [PMC Code v5.4.1]|F3||0|Window,2,Fast,0,1,Input,-1,-1,1|1|Hoi4
 Context=None|
 Groups=Start:1
-1|Continue, Break, FoundX, FoundY, 0|1589, 0, 1808, 84, *100 C:\Users\cero\AppData\Roaming\MacroCreator\Screenshots\Screen_20221231231410.png|1|0|ImageSearch|UntilFound|Window|||1|
+1|Continue, Break, FoundX, FoundY, 0|1589, 0, 1808, 84, *100 C:\Users\cero\Documents\Paradox Interactive\savefilecheck\s1.png|1|0|ImageSearch|UntilFound|Window|||1|
 2|If Image/Pixel Found||1|0|If_Statement|||||9|
 3|[End If]|EndIf|1|0|If_Statement|||||11|
 4|WinWaitActive||1|333|WinWaitActive||ahk_exe hoi4.exe|||12|
 5|Left Move & Click|1896, 16 Left, 1|1|10|Click|||||14|
-6|Continue, Continue, FoundX, FoundY, 0|732, 319, 1206, 780, *100 C:\Users\cero\AppData\Roaming\MacroCreator\Screenshots\Screen_20221231144344.png|1|0|ImageSearch|UntilFound|Window|||16|
+6|Continue, Continue, FoundX, FoundY, 0|732, 319, 1206, 780, *100 C:\Users\cero\Documents\Paradox Interactive\savefilecheck\s2.png|1|0|ImageSearch|UntilFound|Window|||16|
 7|If Image/Pixel Found||1|0|If_Statement|||||22|
 8|[End If]|EndIf|1|0|If_Statement|||||24|
 9|Left Move & Click|957, 444 Left, 1|1|10|Click|||||25|
-10|Continue, Continue, FoundX, FoundY, 0|718, 332, 1269, 861, *100 C:\Users\cero\AppData\Roaming\MacroCreator\Screenshots\Screen_20221231130237.png|1|0|ImageSearch|UntilFound|Window|||27|
+10|Continue, Continue, FoundX, FoundY, 0|718, 332, 1269, 861, *100 C:\Users\cero\Documents\Paradox Interactive\savefilecheck\s3.png|1|0|ImageSearch|UntilFound|Window|||27|
 11|If Image/Pixel Found||1|0|If_Statement|||||33|
 12|[End If]|EndIf|1|0|If_Statement|||||35|
 13|Left Move & Click|1073, 806 Left, 1|1|10|Click|||||36|
