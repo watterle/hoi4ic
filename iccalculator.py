@@ -29,6 +29,9 @@ tagic=[ [0]*len(inputtag) for i in range(nautosaves+1)] #monthly IC in columns
 tagic[0]=inputtag  #tags
 navtagic=[ [0]*len(inputtag) for i in range(nautosaves+1)] #monthly IC in columns
 navtagic[0]=inputtag  #tags
+contractic=[ [0]*len(inputtag) for i in range(nautosaves+1)] #monthly IC in columns
+contractic[0]=inputtag  #tags
+
 
 def listidx(L, obj):
     if obj in L:
@@ -117,6 +120,37 @@ def monthlyic(fullpath,row): #ic calculator
             else:
                 navtagic[row][count]=0
 
+def contractsic(fullpath,row): #contracts counter
+    with open(fullpath, 'r', encoding="utf8") as fp:
+        flag_found=0
+        content = fp.read()
+        custom_regex=r'_count_variable='
+        indices_object = re.finditer(custom_regex, string=content) #looks for contracts counters
+        indices = [index.start() for index in indices_object]
+        contractcountryic=[]
+        ic=0
+        for jj in tags:
+            flag_found=0
+            for x in indices:
+                country="\""+content[x-3:x].upper()+"\""
+                if jj == country:
+                    if country=="\"CZE\"": 
+                        country="\"SLO\""
+                    contractcountryic.append(country)
+                    idx2=content.find('\n', x, x+30) #registers the line's daily IC
+                    ic=float(content[x+16:idx2])
+                    contractcountryic.append(ic)
+                    flag_found=1
+            if flag_found==0:
+                contractcountryic.append(jj)
+                contractcountryic.append(0)
+        #print(contractcountryic)
+        for count,value in enumerate(contractic[0]): #build output table with ICs
+            position=rindex(contractcountryic,value)
+            if (position!=-1) and ((position+1)<len(contractcountryic)):
+                contractic[row][count]=round(contractcountryic[position+1],1)
+            else:
+                contractic[row][count]=0
 
 
 #calculates monthlyic for every file in /save. Edit this if you haven't saved your files as save1, save2,...
@@ -124,11 +158,14 @@ for i in range(nautosaves):
     filename=folderpath+"save"+str(i+1)+".hoi4"
     print_progress_bar(i+1, nautosaves, "Wait...")
     monthlyic(filename,i+1)
+    contractsic(filename,i+1)
 
 
 
 #apply moving average for instant ic and integrates for cumulative ic
 dat = np.array(tagic[1:])*30
+contractdat = np.diff(np.array(contractic[1:]), axis=0, prepend=0)*2000 
+dat=dat+contractdat
 for i in range(len(inputtag)):
     dat[1:nautosaves-1,i]=moving_avg(dat[:,i],3)
 result = sci.cumtrapz(dat, axis=0, dx=1)
