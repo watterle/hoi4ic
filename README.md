@@ -1,9 +1,6 @@
 # Hoi4 IC calculator
 Savegame checker for hoi4
 
-## Requirements
-- Python 3 (os, re, numpy, scipy, matplotlib, sys)
-
 ## Hoi 4 autosaves
 1. Open C:\Users\you\Documents\Paradox Interactive\Hearts of Iron IV\settingsx.txt
 2. Set debug_saves=120 (maximum number of autosaves)
