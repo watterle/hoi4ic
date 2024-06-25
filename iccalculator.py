@@ -110,7 +110,7 @@ for category, taglist in loop.items():
     #Sets "save" folder path
     absolute_path = os.path.dirname(__file__)
     relative_path = "save\\"
-    relative_path_images = category+"\\"
+    relative_path_images = "output\\"+category+"\\"
     folderpath = os.path.join(absolute_path, relative_path)
     folderpathimages = os.path.join(absolute_path, relative_path_images)
     if not os.path.exists(folderpathimages):
@@ -205,7 +205,7 @@ for category, taglist in loop.items():
         plt.savefig(filename, dpi=600, bbox_inches='tight' )
         plt.clf()
     if inputtag == all:
-        factions=["ALLIES", "AXIS", "COMINTERN","GEAPCS"]
+        factions=["ALLIES", "AXIS", "COMINTERN","GEACPS"]
         factionmap =	{
           "\"GER\"":1,"\"SOV\"":2,"\"ENG\"":0,"\"JAP\"":3,"\"USA\"":0,"\"ITA\"":1,"\"FRA\"":0,
           "\"RAJ\"":0, "\"CAN\"":0, "\"AST\"":0, "\"SAF\"":0, "\"NZL\"":0, "\"POL\"":0,
