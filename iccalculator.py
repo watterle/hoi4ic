@@ -89,6 +89,13 @@ def monthlyic(fullpath,row,tagic,navtagic): #ic calculator
                         icsum=icsum+float(content[idx+6:idx2])
                     else:
                         navicsum=navicsum+float(content[idx+6:idx2])
+        for country in tagic[0]:
+            if country not in countryic:
+                countryic.append(country)
+                countryic.append(0)
+            if country not in navcountryic:
+                navcountryic.append(country)
+                navcountryic.append(0)
         countryic.pop(0)
         navcountryic.pop(0)
         #print(countryic)

@@ -9,11 +9,10 @@ Savegame checker for hoi4
 
 ## Usage
 1. Download latest compiled release 
-2. Copy the autosaves to /_internal/save (Autosaves must be named autosave_N.hoi4)
+2. Copy the autosaves to /_internal/save (Autosaves must be named autosave_N.hoi4 and nothing else can be in the folder)
 3. Run iccalculator.exe
 4. Ic graphs are created in /_internal/output
 
 ## Notes
 - Only actual production is measured. IC from focuses/decision is not considered.
 - Monthly IC is approximated as 30 times the instant IC at the time of the save. 
-- You might have to delete the old plots in /_internal/output to create new images 
