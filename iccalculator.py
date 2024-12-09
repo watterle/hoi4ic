@@ -3,10 +3,6 @@ import numpy as np
 import os
 import scipy.integrate as sci
 import sys
-import tkinter as tk
-from tkinter import filedialog 
-from tkinter import ttk 
-import threading
 import matplotlib.pyplot as plt
 
 tags=["\"ENG\"", "\"USA\"", "\"FRA\"", "\"RAJ\"", "\"MAN\"", "\"EFR\"", "\"CAN\"", "\"AST\"", "\"CHI\"", "\"RCC\"", "\"SAF\"","\"PER\"", "\"NZL\"", "\"SOV\"", "\"GER\"", "\"ITA\"", "\"HUN\"", "\"ROM\"", "\"BUL\"", "\"VIC\"", "\"JAP\"", "\"MAN\"", "\"FIN\"", "\"SLO\"", "\"SPR\"", "\"LAT\"", "\"YUG\"", "\"GRE\"", "\"ALB\"", "\"NOR\"", "\"POR\"", "\"IRE\"", "\"ETH\"", "\"IRQ\"", "\"SIA\"", "\"VEN\"", "\"MON\"", "\"TAN\"", "\"PAR\"", "\"PRC\"", "\"BEL\"", "\"INS\"", "\"AUS\"", "\"POL\"", "\"CZE\"", "\"HOL\""]
@@ -128,10 +124,6 @@ def calculator():
         relative_path_images = "output\\"+category+"\\"
         folderpath = os.path.join(absolute_path, relative_path)
         folderpathimages = os.path.join(absolute_path, relative_path_images)
-        if save_directory != None:
-            folderpath = save_directory+"/"
-        if image_directory != None:
-            folderpathimages = image_directory+"/"+category+"/"
         if not os.path.exists(folderpathimages):
             os.makedirs(folderpathimages)
         nautosaves=len([entry for entry in os.listdir(folderpath) if os.path.isfile(os.path.join(folderpath, entry))])
@@ -147,7 +139,6 @@ def calculator():
         for i in range(nautosaves):  
             filename=folderpath+"autosave_"+str(nautosaves-i)+".hoi4"
             print_progress_bar(i+1, nautosaves, "Wait...")
-            progressbar.step(25/nautosaves)
             monthlyic(filename,i+1,tagic,navtagic)
 
 
@@ -278,39 +269,4 @@ def calculator():
 
 
 
-window = tk.Tk()
-window.title("HOI4 IC calculator")
-window.geometry('350x200')
-lbl_save = tk.Label(window, text="Default: /internal/save")
-lbl_save.grid(column=1, row=0)
-lbl_image = tk.Label(window, text="Default: /internal/output")
-lbl_image.grid(column=1, row=1)
-image_directory = None
-save_directory = None
-
-def save_button_clicked():
-    global save_directory 
-    save_directory = tk.filedialog.askdirectory(parent=window,initialdir=os.path.dirname(__file__),title='Please select the saves directory')
-    if save_directory != None:
-        lbl_save.configure(text=save_directory)
-def image_button_clicked():
-    global image_directory 
-    image_directory = tk.filedialog.askdirectory(parent=window,initialdir=os.path.dirname(__file__),title='Please select the output directory')
-    if image_directory != None:
-        lbl_image.configure(text=image_directory)
-def on_closing():
-    if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
-        window.destroy()
-def run_ic():
-    threading.Thread(target=calculator, daemon=True).start()
-btn = tk.Button(window, text="Select saves directory", command=save_button_clicked)
-btn.grid(column=0, row=0)
-btn = tk.Button(window, text="Select image directory", command=image_button_clicked)
-btn.grid(column=0, row=1)
-btn = tk.Button(window, text="Start calculator", command=run_ic)
-btn.grid(column=0, row=2)
-progressbar = ttk.Progressbar()
-progressbar.place(x=130, y=130)
-#progressbar.start()
-window.protocol("WM_DELETE_WINDOW", on_closing)
-window.mainloop()
+calculator()
